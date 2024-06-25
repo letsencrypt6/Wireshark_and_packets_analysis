@@ -1,8 +1,8 @@
 # Wireshark 介绍和 packet analysis
 - Wireshark/tcpdump/tshark 的使用
 - 数据包在 L2/MAC, L3/IP, L4/TCP/UDP/SSL/TLS, L7/HTTP/HTTPS/WebSocket 的关注点
-- TechZone 系列培训资料，[点赞收藏转发吃灰](https://techzone.cisco.com/t5/Troubleshooting-and-Tools/Wireshark-Packet-Analysis-for-TAC-Engineers-Master-Article/ta-p/1819960)
-- [Wireshark 数据包导入 IXIA](https://techzone.cisco.com/t5/9000/8-simple-steps-to-replay-Wireshark-pcap-file-through-IXIA/ta-p/1574481)
+- TechZone 系列培训资料，[点赞收藏转发吃灰](https://techzone.co.com/t5/Troubleshooting-and-Tools/Wireshark-Packet-Analysis-for-TAC-Engineers-Master-Article/ta-p/1819960)
+- [Wireshark 数据包导入 IXIA](https://techzone.co.com/t5/9000/8-simple-steps-to-replay-Wireshark-pcap-file-through-IXIA/ta-p/1574481)
 
 ## 为什么需要做 SPAN/tcpdump
 - 业务有延迟，间歇性丢包 (ELAM 不适用）
@@ -21,7 +21,7 @@
 - <kbd> Export Specified Packets </kbd>，按需导出报文，比如 Displayed, Selected，Range 等
 - <kbd> Export Packets Dissections </kbd>，把报文导出成不同格式，比如 text, CSV, JSON，方便 Ctrl + F 搜索。另一种实现方法是通过 **tshark**，读取特定的报文然后 grep
 ```bash
-cd '/mnt/c/Users/fushuang/OneDrive - Cisco/Documents/work-docs/ACI/packets-capture'
+cd '/mnt/c/Users/co/OneDrive/Documents/work-docs/ACI/packets-capture'
 ls -l
 tshark -r TLS-Decrypt-gitlab.pcapng | head
 tshark -r TLS-Decrypt-gitlab.pcapng -Y frame.number==4            // TLS Client Hello
@@ -50,7 +50,7 @@ luke:packets-capture$ tshark -r TLS-Decrypt-gitlab.pcapng -Y frame.number==4 -O 
     - Time delta from previous captured frame   (`frame.time_delta`)
     - Time delta from previous displayed frame  (`frame.time_delta_displayed`) // 如果有 display filter，通常参考这个数值
   - 含义是距离上一个报文的时间，包括了 client/server 处理时间 + 网络传输时间
-  - 一个 [案例](https://scripts.cisco.com/app/quicker_csone/?sr=695420786#a096R0000339xXYQAY)
+  - 一个 [案例](https://scripts.co.com/app/quicker_csone/?sr=695420786#a096R0000339xXYQAY)
 - **TCP**
   - 在 TCP 的 <kbd> Timestamps </kbd> 这一层，有两个维度
     - Time since first frame in this TCP stream     (`tcp.time_relative`) // 同一条 TCP Stream，和第一个 TCP 报文的时间差（不一定是 TCP 三次握手的 SYN，取决于抓包开始的时间）
@@ -82,7 +82,7 @@ luke:packets-capture$ tshark -r TLS-Decrypt-gitlab.pcapng -Y frame.number==4 -O 
 | Conversations           | 交互的 IP 地址对的数据包数量，size 的统计，效果和 **Endpoint** 类似                                                                                                                                 |
 | Endpoint                | 查看哪些 IP/MAC 交互，[占用的带宽最多](https://www.golinuxcloud.com/measure-bandwidth-wireshark/)                                                                                                   |
 | Packets Length          | 数据包长度的统计，burst rate                                                                                                                                                                        |
-| I/O Graphs              | 流量趋势（比如业务慢）; 有没有 [burst traffic](https://www.cisco.com/c/en/us/support/docs/lan-switching/switched-port-analyzer-span/116260-technote-wireshark-00.html)                              |
+| I/O Graphs              | 流量趋势（比如业务慢）; 有没有 [burst traffic](https://www.co.com/c/en/us/support/docs/lan-switching/switched-port-analyzer-span/116260-technote-wireshark-00.html)                              |
 | TCP Stream Graphs       | TCP stream 的统计，比如 Sequence number 随着时间的增长趋势，Throughput, RTT, Window Scaling（滑动窗口）等。[进阶版](https://www.packetsafari.com/blog/2021/10/31/wireshark-tcp-graphs/)，如果感兴趣 |
 
 - 命令 `capinfos`
@@ -154,7 +154,7 @@ ACK & RST 的 RTT 应该接近，因为经过相同网络路径转发，通常 R
 - 十六进制，比如 Identification: 0x8f00 (36608)；十进制范围在 0 - 65535
 - 同一个 TCP stream 如果持续时间比较长，或者交互很快，Identification 会循环使用
 - 主要作用：identifies fragmented packet；以及在多个设备同时抓包，如何找到同一个报文 (`ip.id`相同，时间戳差异毫秒级）
-- 一个 [案例](https://scripts.cisco.com/app/quicker_csone/?sr=695420786#a096R000033NkjyQAC)，client 10.191.84.x 向 MySQL 服务器 10.191.64.x 发起请求，通常这个请求应该在 1-2 分钟内完成；把一部分 client 从老机房迁移到 ACI 机房以后，这个请求需要 5-10 分钟才能完成。
+- 一个 [案例](https://scripts.co.com/app/quicker_csone/?sr=695420786#a096R000033NkjyQAC)，client 10.191.84.x 向 MySQL 服务器 10.191.64.x 发起请求，通常这个请求应该在 1-2 分钟内完成；把一部分 client 从老机房迁移到 ACI 机房以后，这个请求需要 5-10 分钟才能完成。
 ![picture 8](./assest/img/ip-id.png)  
 
 <details>
@@ -169,7 +169,7 @@ Client 端抓包的 ip.id 65276, length 6749，和前面 leaf SPAN 的 length 15
 </details>
 
 ### DNS
-- 一个 [案例](https://scripts.cisco.com/app/quicker_csone/?sr=695433466#a096R000033GrKiQAK)，VMware 容器云，Pods 之间通过 ACI 打通底层网络，client/MySQL 到 coreDNS 之间偶尔出现 DNS 解析失败
+- 一个 [案例](https://scripts.co.com/app/quicker_csone/?sr=695433466#a096R000033GrKiQAK)，VMware 容器云，Pods 之间通过 ACI 打通底层网络，client/MySQL 到 coreDNS 之间偶尔出现 DNS 解析失败
 - 通过在 VMware 的 VMNIC, Pod 以及 ACI leaf 抓包，需要分析 DNS query & response，在哪一个环节出问题。
   - DNS query 是否都到达了 coreDNS
   - 如果 query 都到达了 coreDNS，那么是否都得到了 response
@@ -212,7 +212,7 @@ Client 端抓包的 ip.id 65276, length 6749，和前面 leaf SPAN 的 length 15
   - TCP 拥塞处理，慢启动，初始的 cwnd 通常是 MSS or 10 x MSS
 
 ### TCP Flags
-- 一个 [案例](https://scripts.cisco.com/app/quicker_csone/?sr=695420786#a096R000033ADDwQAO)
+- 一个 [案例](https://scripts.co.com/app/quicker_csone/?sr=695420786#a096R000033ADDwQAO)
 - TCP Flags，主要关注 **SYN, ACK, PSH, RST, URG, ECN, CWR**
 - TCP 三次握手
 - TCP 四次挥手
@@ -237,7 +237,7 @@ Flags: 0x0c2 (SYN, ECE, CWR)
 - 中间可能有重传，reset
 
 ### TCP Spurious Retransmission
-- 一个 [案例](https://scripts.cisco.com/app/quicker_csone/?sr=695420786#a096R00003366oRQAQ)
+- 一个 [案例](https://scripts.co.com/app/quicker_csone/?sr=695420786#a096R00003366oRQAQ)
 - 什么情况下会重传/retransmission ?
 - TCP 重传有可能是一个正常现象，要结合当时的具体情况去分析。但是如果存在大量重传报文，就有必要进一步分析了
 
@@ -249,7 +249,7 @@ Flags: 0x0c2 (SYN, ECE, CWR)
 | 缓存           | 上层 app 来不及处理，缓存被清空的；还有一种可能是 client/app 单线程，处理慢                      |
 
 ### TCP Window Full & ZeroWindow
-- 一个 [案例](https://scripts.cisco.com/app/quicker_csone/?sr=695420786#a096R000033A0taQAC)
+- 一个 [案例](https://scripts.co.com/app/quicker_csone/?sr=695420786#a096R000033A0taQAC)
 - **TCP 要解决可靠传输 & packets 乱序 & 故障可靠通知**，所以 TCP 要了解网络的带宽，client/server 处理 packets 的速度等，避免拥塞/丢包/重传。
 - sliding window/滑动窗口是 TCP 流控的一个方式
 - 如果 client/server 处理 packets 速度慢，buffer 容易打满，可以通过 Window Full & ZeroWindow 告知对方，暂缓发送
@@ -281,12 +281,12 @@ Flags: 0x0c2 (SYN, ECE, CWR)
   - HTTP header 都有什么，是否都是合法合规的 header
   - 是否存在 CORS 问题
   - 每个阶段 (DNS 解析，TCP 建立连接，SSL/TLS 协商，HTTP 请求/响应） 消耗的时间，用来判断延迟主要在哪一部分
-  - 举个栗子，以 chrome 访问 [gitlab](https://gitlab-sjc.cisco.com) 为例，大约 0.6 秒打开网页，其中 99%的延迟是 Waiting for server response
+  - 举个栗子，以 chrome 访问 [gitlab](https://gitlab-sjc.co.com) 为例，大约 0.6 秒打开网页，其中 99%的延迟是 Waiting for server response
 ![picture 3](./assest/img/chrome-har.png)  
 
 - 扩展：使用 `curl` 查看延迟
 ```bash
-luke@ubuntu20:~$ curl -kso /dev/null https://cloud.ik3cloud.com  -w "==============\n\n time_dnslookup: %{time_namelookup}\n time_connect: %{time_connect}\n time_appconnect: %{time_appconnect}\n time_pretransfer: %{time_pretransfer}\n time_starttransder: %{time_starttransfer}\n total time: %{time_total}\n size: %{size_download}\n HTTPCode=%{http_code}\n\n"
+co@ubuntu20:~$ curl -kso /dev/null https://cloud.ik3cloud.com  -w "==============\n\n time_dnslookup: %{time_namelookup}\n time_connect: %{time_connect}\n time_appconnect: %{time_appconnect}\n time_pretransfer: %{time_pretransfer}\n time_starttransder: %{time_starttransfer}\n total time: %{time_total}\n size: %{size_download}\n HTTPCode=%{http_code}\n\n"
 ==============
 # 每个阶段的含义，可以直接从 man curl 里面搜索
 
